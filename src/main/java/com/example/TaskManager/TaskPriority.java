@@ -1,6 +1,6 @@
 package com.example.TaskManager;
 
-public enum taskPriority {
+public enum TaskPriority {
     LOW,
     MEDIUM,
     HIGH

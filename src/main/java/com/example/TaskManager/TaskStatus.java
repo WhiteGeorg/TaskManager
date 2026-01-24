@@ -1,6 +1,6 @@
 package com.example.TaskManager;
 
-public enum taskStatus {
+public enum TaskStatus {
     CREATED,
     IN_PROGRESS,
     FAILED,

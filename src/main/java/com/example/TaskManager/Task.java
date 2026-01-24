@@ -1,14 +1,18 @@
 package com.example.TaskManager;
 
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
 public class Task {
     Long id;
     Long creatorId;
     Long assignedId;
-    taskStatus status;
+    TaskStatus status;
     LocalDateTime createDateTime;
     LocalDateTime deadlineDate;
-    taskPriority priority;
+    TaskPriority priority;
 }
