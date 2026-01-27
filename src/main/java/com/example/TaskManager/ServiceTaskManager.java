@@ -73,4 +73,14 @@ public class ServiceTaskManager {
         return newTask;
     }
 
+    public Task reopenTaskById(Long id) {
+        if (!mapTasks.containsKey(id)) {
+            throw new NoSuchElementException("Can not find any tasks with id " + id);
+        }
+        var taskToUpdate = mapTasks.get(id);
+        if (!taskToUpdate.getStatus().equals(TaskStatus.DONE))
+            throw new IllegalArgumentException("Task already available");
+        taskToUpdate.setStatus(TaskStatus.IN_PROGRESS);
+        return taskToUpdate;
+    }
 }

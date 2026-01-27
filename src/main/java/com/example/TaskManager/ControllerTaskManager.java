@@ -62,6 +62,14 @@ public class ControllerTaskManager {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskToUpdate);
     }
 
+    @PostMapping("/{id}/reopen")
+    public ResponseEntity<Task> reopenTaskById(@PathVariable Long id) {
+        log.info("reopenTaskById::POST request to reopen task by id:{}", id);
+        var taskToUpdate = serviceTaskManager.reopenTaskById(id);
+
+        return ResponseEntity.ok(taskToUpdate);
+    }
+
 
 }
 
