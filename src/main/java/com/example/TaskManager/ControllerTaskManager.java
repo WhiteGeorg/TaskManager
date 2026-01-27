@@ -46,30 +46,21 @@ public class ControllerTaskManager {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTaskById(@PathVariable Long id)
-    {
-        log.info("deleteTaskById::DELETE request by id:{}",id);
+    public ResponseEntity<Void> deleteTaskById(@PathVariable Long id) {
+        log.info("deleteTaskById::DELETE request by id:{}", id);
         serviceTaskManager.deleteTaskById(id);
         return ResponseEntity
                 .ok()
                 .build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> putTaskById(@PathVariable Long id, @RequestBody Task task) {
+        log.info("putTaskById::PUT request with body" + task.toString());
+        var taskToUpdate = serviceTaskManager.putTaskById(id, task);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskToUpdate);
+    }
 
 
 }

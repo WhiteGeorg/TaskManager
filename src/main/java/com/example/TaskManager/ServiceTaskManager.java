@@ -51,4 +51,22 @@ public class ServiceTaskManager {
         }
         mapTasks.remove(id);
     }
+
+    public Task putTaskById(Long id, Task task) {
+
+        if (!task.getId().equals(id))
+            throw new IllegalArgumentException("ID are Different");
+        if (!mapTasks.containsKey(id))
+            throw new NoSuchElementException("Can not find any tasks with id " + id);
+        var newTask = new Task(
+                task.getId(),
+                task.getCreatorId(),
+                task.getAssignedId(),
+                task.getStatus(),
+                task.getCreateDateTime(),
+                task.getDeadlineDate(),
+                task.getPriority());
+        mapTasks.put(newTask.getId(),newTask);
+        return newTask;
+    }
 }
