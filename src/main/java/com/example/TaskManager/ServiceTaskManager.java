@@ -7,43 +7,31 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ServiceTaskManager {
     HashMap<Long, Task> mapTasks;
-
+    AtomicLong idCounter;
     ServiceTaskManager() {
         mapTasks = new HashMap<Long, Task>();
-        mapTasks.put(0L,
-                new Task(
-                        0L,
-                        0L,
-                        1L,
-                        TaskStatus.CREATED,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        TaskPriority.LOW
-                ));
-        mapTasks.put(1L,
-                new Task(
-                        1L,
-                        0L,
-                        1L,
-                        TaskStatus.CREATED,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        TaskPriority.MEDIUM
-                ));
-        mapTasks.put(2L,
-                new Task(
-                        2L,
-                        1L,
-                        0L,
-                        TaskStatus.CREATED,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        TaskPriority.HIGH
-                ));
+        idCounter = new AtomicLong();
+    }
+
+    public Task postNewTask(Task task) {
+        if (task.getId() != null)
+            throw new IllegalArgumentException("Permission denied");
+        var newTask = new Task(
+                idCounter.incrementAndGet(),
+                task.getCreatorId(),
+                task.getAssignedId(),
+                task.getStatus(),
+                task.getCreateDateTime(),
+                task.getDeadlineDate(),
+                task.getPriority());
+        mapTasks.put(newTask.getId(),newTask);
+
+        return newTask;
     }
 
     public Task getTaskById(Long id) {

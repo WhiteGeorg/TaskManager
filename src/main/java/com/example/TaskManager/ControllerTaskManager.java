@@ -4,13 +4,13 @@ package com.example.TaskManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/tasks")
 public class ControllerTaskManager {
     Logger log = LoggerFactory.getLogger(ControllerTaskManager.class);
 
@@ -21,15 +21,42 @@ public class ControllerTaskManager {
         this.serviceTaskManager = serviceTaskManager;
     }
 
-    @GetMapping("/tasks")
+    @GetMapping
     public List<Task> getTaskList(){
         log.info("getTaskList GET request called");
         return serviceTaskManager.getTaskList();
     }
 
-    @GetMapping("/tasks/{id}")
+    @GetMapping("/{id}")
     public Task getTaskById(@PathVariable("id") Long id){
         log.info("getTaskById GET request by id {} called",id);
-            return serviceTaskManager.getTaskById(id);
+        return serviceTaskManager.getTaskById(id);
     }
+
+    @PostMapping
+    public ResponseEntity<Task> postNewTask(@RequestBody Task task)
+    {
+        var newTask = serviceTaskManager.postNewTask(task);
+        return ResponseEntity.ok(newTask);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+

@@ -3,6 +3,7 @@ package com.example.TaskManager;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,6 +14,6 @@ public class Task {
     Long assignedId;
     TaskStatus status;
     LocalDateTime createDateTime;
-    LocalDateTime deadlineDate;
+    LocalDate deadlineDate;
     TaskPriority priority;
 }
