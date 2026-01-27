@@ -22,40 +22,24 @@ public class ControllerTaskManager {
     }
 
     @GetMapping
-    public List<Task> getTaskList(){
+    public ResponseEntity<List<Task>> getTaskList() {
         log.info("getTaskList GET request called");
-        return serviceTaskManager.getTaskList();
+        var taskList = serviceTaskManager.getTaskList();
+        return ResponseEntity.ok(taskList);
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable("id") Long id){
-        log.info("getTaskById GET request by id {} called",id);
-        return serviceTaskManager.getTaskById(id);
+    public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
+        log.info("getTaskById GET request by id {} called", id);
+        var task = serviceTaskManager.getTaskById(id);
+        return ResponseEntity.ok(task);
     }
 
     @PostMapping
-    public ResponseEntity<Task> postNewTask(@RequestBody Task task)
-    {
+    public ResponseEntity<Task> postNewTask(@RequestBody Task task) {
         var newTask = serviceTaskManager.postNewTask(task);
         return ResponseEntity.ok(newTask);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
