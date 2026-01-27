@@ -45,4 +45,10 @@ public class ServiceTaskManager {
         return mapTasks.values().stream().toList();
     }
 
+    public void deleteTaskById(Long id) {
+        if (!mapTasks.containsKey(id)) {
+            throw new NoSuchElementException("Can not find any tasks with id " + id);
+        }
+        mapTasks.remove(id);
+    }
 }
