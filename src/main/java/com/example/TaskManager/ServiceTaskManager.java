@@ -1,86 +1,119 @@
 package com.example.TaskManager;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ServiceTaskManager {
-    HashMap<Long, Task> mapTasks;
-    AtomicLong idCounter;
 
-    ServiceTaskManager() {
-        mapTasks = new HashMap<Long, Task>();
-        idCounter = new AtomicLong();
+    RepositoryTask repositoryTask;
+
+    @Autowired
+    ServiceTaskManager(RepositoryTask repositoryTask) {
+        this.repositoryTask = repositoryTask;
     }
 
     public Task postNewTask(Task task) {
-        if (task.getId() != null || task.getStatus() != null)
-            throw new IllegalArgumentException("Permission denied");
-        var newTask = new Task(
-                idCounter.incrementAndGet(),
+        if (task.getId() != null)
+            throw new IllegalArgumentException("Permission denied,id should be null");
+        if (task.getStatus() != null)
+            throw new IllegalArgumentException("Permission denied,Status should be null");
+
+        var newTask = new EntityTask(
+                null,
                 task.getCreatorId(),
                 task.getAssignedId(),
                 TaskStatus.CREATED,
                 task.getCreateDateTime(),
                 task.getDeadlineDate(),
                 task.getPriority());
-        mapTasks.put(newTask.getId(), newTask);
-
-        return newTask;
+        EntityTask newEntity = repositoryTask.save(newTask);
+        return mapEntityToDomain(newEntity);
     }
 
     public Task getTaskById(Long id) {
-        if (!mapTasks.containsKey(id)) {
-            throw new NoSuchElementException("Can not find any tasks with id " + id);
-        }
-        return mapTasks.get(id);
+        EntityTask entityTask = repositoryTask
+                .findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Can not find any tasks with id " + id));
+
+        return mapEntityToDomain(entityTask);
     }
 
     public List<Task> getTaskList() {
-        return mapTasks.values().stream().toList();
+
+        return repositoryTask
+                .findAll()
+                .stream()
+                .map(this::mapEntityToDomain)
+                .toList();
     }
 
     public void deleteTaskById(Long id) {
-        if (!mapTasks.containsKey(id)) {
-            throw new NoSuchElementException("Can not find any tasks with id " + id);
-        }
-        mapTasks.remove(id);
+
+        repositoryTask
+                .findById(id)
+                .orElseThrow(()-> new NoSuchElementException("Can not find any tasks with id " + id));
+
+        repositoryTask.deleteById(id);
     }
 
     public Task putTaskById(Long id, Task task) {
-        if (!task.getId().equals(id))
-            throw new IllegalArgumentException("ID are Different");
-        if (!mapTasks.containsKey(id))
-            throw new NoSuchElementException("Can not find any tasks with id " + id);
-        var taskToUpdate = mapTasks.get(id);
-        if (taskToUpdate.getStatus().equals(TaskStatus.DONE))
+        var taskToUpdate = repositoryTask
+                .findById(id)
+                .orElseThrow(()-> new NoSuchElementException("Can not find any tasks with id " + id));
+
+        if (task.getId() != null)
+            throw new IllegalArgumentException("Permission denied,id should be null");
+
+        if (taskToUpdate
+                .getStatus()
+                .equals(TaskStatus.DONE))
             throw new IllegalArgumentException("PERMISSION DENIED task already DONE");
-        var newTask = new Task(
-                task.getId(),
+
+        var newTask = new EntityTask(
+                taskToUpdate.getId(),
                 task.getCreatorId(),
                 task.getAssignedId(),
                 task.getStatus(),
                 task.getCreateDateTime(),
                 task.getDeadlineDate(),
                 task.getPriority());
-        mapTasks.put(newTask.getId(), newTask);
-        return newTask;
+
+        repositoryTask.save(newTask);
+        return mapEntityToDomain(newTask);
     }
 
     public Task reopenTaskById(Long id) {
-        if (!mapTasks.containsKey(id)) {
-            throw new NoSuchElementException("Can not find any tasks with id " + id);
-        }
-        var taskToUpdate = mapTasks.get(id);
-        if (!taskToUpdate.getStatus().equals(TaskStatus.DONE))
+
+        var entityToUpdate = repositoryTask
+                .findById(id)
+                .orElseThrow(()-> new NoSuchElementException("Can not find any tasks with id " + id));
+
+        if (!entityToUpdate
+                .getStatus()
+                .equals(TaskStatus.DONE))
             throw new IllegalArgumentException("Task already available");
-        taskToUpdate.setStatus(TaskStatus.IN_PROGRESS);
-        return taskToUpdate;
+
+        entityToUpdate.setStatus(TaskStatus.IN_PROGRESS);
+
+        repositoryTask.save(entityToUpdate);
+
+        return mapEntityToDomain(entityToUpdate);
     }
+
+    private Task mapEntityToDomain(EntityTask entityTask) {
+        return new Task(
+                entityTask.getId(),
+                entityTask.getCreatorId(),
+                entityTask.getAssignedId(),
+                entityTask.getStatus(),
+                entityTask.getCreateDateTime(),
+                entityTask.getDeadlineDate(),
+                entityTask.getPriority());
+    }
+
+
 }
