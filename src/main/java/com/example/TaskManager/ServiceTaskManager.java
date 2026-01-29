@@ -1,10 +1,10 @@
 package com.example.TaskManager;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ServiceTaskManager {
@@ -18,9 +18,9 @@ public class ServiceTaskManager {
 
     public Task postNewTask(Task task) {
         if (task.getId() != null)
-            throw new IllegalArgumentException("Permission denied,id should be null");
+            throw new IllegalArgumentException("id should be null");
         if (task.getStatus() != null)
-            throw new IllegalArgumentException("Permission denied,Status should be null");
+            throw new IllegalStateException("Status should be null");
 
         var newTask = new EntityTask(
                 null,
@@ -37,7 +37,7 @@ public class ServiceTaskManager {
     public Task getTaskById(Long id) {
         EntityTask entityTask = repositoryTask
                 .findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Can not find any tasks with id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Can not find any tasks with id " + id));
 
         return mapEntityToDomain(entityTask);
     }
@@ -55,7 +55,7 @@ public class ServiceTaskManager {
 
         repositoryTask
                 .findById(id)
-                .orElseThrow(()-> new NoSuchElementException("Can not find any tasks with id " + id));
+                .orElseThrow(()-> new EntityNotFoundException("Can not find any tasks with id " + id));
 
         repositoryTask.deleteById(id);
     }
@@ -63,7 +63,7 @@ public class ServiceTaskManager {
     public Task putTaskById(Long id, Task task) {
         var taskToUpdate = repositoryTask
                 .findById(id)
-                .orElseThrow(()-> new NoSuchElementException("Can not find any tasks with id " + id));
+                .orElseThrow(()-> new EntityNotFoundException("Can not find any tasks with id " + id));
 
         if (task.getId() != null)
             throw new IllegalArgumentException("Permission denied,id should be null");
@@ -90,7 +90,7 @@ public class ServiceTaskManager {
 
         var entityToUpdate = repositoryTask
                 .findById(id)
-                .orElseThrow(()-> new NoSuchElementException("Can not find any tasks with id " + id));
+                .orElseThrow(()-> new EntityNotFoundException("Can not find any tasks with id " + id));
 
         if (!entityToUpdate
                 .getStatus()
