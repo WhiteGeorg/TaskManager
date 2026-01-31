@@ -33,7 +33,7 @@ public class EntityTask {
     LocalDateTime createDateTime;
 
     @Column(name = "deadline_Date")
-    LocalDate deadlineDate;
+    LocalDateTime deadlineDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")

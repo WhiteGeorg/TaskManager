@@ -20,7 +20,8 @@ public class ServiceTaskManager {
 
         if (task.getStatus() != null)
             throw new IllegalStateException("Status should be null");
-
+        if (!validateDate(task))
+            throw new IllegalArgumentException("Start date should be earlier End date");
         var newTask = new EntityTask(
                 null,
                 task.getCreatorId(),
@@ -69,6 +70,9 @@ public class ServiceTaskManager {
                 .equals(TaskStatus.DONE))
             throw new IllegalArgumentException("PERMISSION DENIED task already DONE");
 
+        if (!validateDate(task))
+            throw new IllegalArgumentException("Start date should be earlier End date");
+
         var newTask = new EntityTask(
                 taskToUpdate.getId(),
                 task.getCreatorId(),
@@ -116,7 +120,10 @@ public class ServiceTaskManager {
 
         return mapEntityToDomain(entityToUpdate);
     }
-
+    private boolean validateDate(Task task)
+    {
+        return (task.getCreateDateTime().isBefore(task.getDeadlineDate()));
+    }
     private Task mapEntityToDomain(EntityTask entityTask) {
         return new Task(
                 entityTask.getId(),

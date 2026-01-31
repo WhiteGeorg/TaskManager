@@ -24,7 +24,7 @@ public class Task {
     LocalDateTime createDateTime;
     @NotNull
     @FutureOrPresent
-    LocalDate deadlineDate;
+    LocalDateTime deadlineDate;
     @NotNull
     TaskPriority priority;
 }
