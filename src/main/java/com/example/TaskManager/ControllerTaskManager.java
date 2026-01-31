@@ -62,17 +62,24 @@ public class ControllerTaskManager {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskToUpdate);
     }
 
-    @PostMapping("/{id}/start")
+    @PatchMapping("/{id}/start")
     public ResponseEntity<Task> startTaskById(@PathVariable Long id) {
-        log.info("startTaskById::POST request to reopen task by id:{}", id);
+        log.info("startTaskById::PATCH request to start task by id:{}", id);
         var taskToUpdate = serviceTaskManager.startTaskById(id);
 
         return ResponseEntity.ok(taskToUpdate);
     }
-    @PostMapping("/{id}/reopen")
-    public ResponseEntity<Task> reopenTaskById(@PathVariable Long id) {
-        log.info("reopenTaskById::POST request to reopen task by id:{}", id);
-        var taskToUpdate = serviceTaskManager.reopenTaskById(id);
+    @PatchMapping("/{id}/reopen")
+    public ResponseEntity<Task> reopenTaskById(@PathVariable Long id, @RequestBody @Valid Task task) {
+        log.info("reopenTaskById::PATCH request to reopen task by id:{}", id);
+        var taskToUpdate = serviceTaskManager.reopenTaskById(id,task);
+
+        return ResponseEntity.ok(taskToUpdate);
+    }
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<Task> completeTaskById(@PathVariable Long id) {
+        log.info("completeTaskById::PATCH request to complete task by id:{}", id);
+        var taskToUpdate = serviceTaskManager.completeTaskById(id);
 
         return ResponseEntity.ok(taskToUpdate);
     }

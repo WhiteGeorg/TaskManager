@@ -1,8 +1,6 @@
 package com.example.TaskManager;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,12 +17,16 @@ public class Task {
     @Null
     Long assignedId;
     TaskStatus status;
-    @NotNull
-    @FutureOrPresent
+
+    @Null
     LocalDateTime createDateTime;
     @NotNull
-    @FutureOrPresent
+    @Future
     LocalDateTime deadlineDate;
+
+    @Null
+    LocalDateTime completeTime;
+
     @NotNull
     TaskPriority priority;
 }
