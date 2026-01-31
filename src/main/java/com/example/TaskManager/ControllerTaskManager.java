@@ -1,6 +1,7 @@
 package com.example.TaskManager;
 
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ public class ControllerTaskManager {
     public ControllerTaskManager(ServiceTaskManager serviceTaskManager) {
         this.serviceTaskManager = serviceTaskManager;
     }
-
     @GetMapping
     public ResponseEntity<List<Task>> getTaskList() {
         log.info("getTaskList::GET request called");
@@ -37,8 +37,8 @@ public class ControllerTaskManager {
     }
 
     @PostMapping
-    public ResponseEntity<Task> postNewTask(@RequestBody Task task) {
-        log.info("postNewTask::POST request with body:" + task.toString());
+    public ResponseEntity<Task> postNewTask(@RequestBody @Valid Task task) {
+        log.info("postNewTask::POST request with body:{}",task.toString());
         var newTask = serviceTaskManager.postNewTask(task);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -55,8 +55,8 @@ public class ControllerTaskManager {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> putTaskById(@PathVariable Long id, @RequestBody Task task) {
-        log.info("putTaskById::PUT request with body" + task.toString());
+    public ResponseEntity<Task> putTaskById(@PathVariable Long id, @RequestBody @Valid Task task) {
+        log.info("putTaskById::PUT request with body:{}",task.toString());
         var taskToUpdate = serviceTaskManager.putTaskById(id, task);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskToUpdate);

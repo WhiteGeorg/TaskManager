@@ -17,8 +17,7 @@ public class ServiceTaskManager {
     }
 
     public Task postNewTask(Task task) {
-        if (task.getId() != null)
-            throw new IllegalArgumentException("id should be null");
+
         if (task.getStatus() != null)
             throw new IllegalStateException("Status should be null");
 
@@ -64,9 +63,6 @@ public class ServiceTaskManager {
         var taskToUpdate = repositoryTask
                 .findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Can not find any tasks with id " + id));
-
-        if (task.getId() != null)
-            throw new IllegalArgumentException("Permission denied,id should be null");
 
         if (taskToUpdate
                 .getStatus()
