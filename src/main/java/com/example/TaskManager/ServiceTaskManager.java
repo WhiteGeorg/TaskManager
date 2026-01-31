@@ -103,6 +103,23 @@ public class ServiceTaskManager {
 
         return mapEntityToDomain(entityToUpdate);
     }
+    public Task startTaskById(Long id) {
+
+        var entityToUpdate = repositoryTask
+                .findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Can not find any tasks with id " + id));
+
+        if (!entityToUpdate
+                .getStatus()
+                .equals(TaskStatus.CREATED))
+            throw new IllegalArgumentException("Can not open not CREATED task");
+
+        entityToUpdate.setStatus(TaskStatus.IN_PROGRESS);
+
+        repositoryTask.save(entityToUpdate);
+
+        return mapEntityToDomain(entityToUpdate);
+    }
 
     private Task mapEntityToDomain(EntityTask entityTask) {
         return new Task(
@@ -114,6 +131,4 @@ public class ServiceTaskManager {
                 entityTask.getDeadlineDate(),
                 entityTask.getPriority());
     }
-
-
 }
