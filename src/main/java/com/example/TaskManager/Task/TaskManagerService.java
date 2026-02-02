@@ -99,7 +99,7 @@ public class TaskManagerService {
         return mapper.mapEntityToDomain(entityToUpdate);
     }
     //добавить параметр с assigned
-    public Task startTaskById(Long id) {
+    public Task startTaskById(Long id,Long assignedId) {
 
         var entityToUpdate = taskRepository
                 .findById(id)

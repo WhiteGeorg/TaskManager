@@ -22,6 +22,7 @@ public class TaskManagerController {
     public TaskManagerController(TaskManagerService serviceTaskManager) {
         this.serviceTaskManager = serviceTaskManager;
     }
+
     @GetMapping
     public ResponseEntity<List<Task>> getTaskList() {
         log.info("getTaskList::GET request called");
@@ -38,7 +39,7 @@ public class TaskManagerController {
 
     @PostMapping
     public ResponseEntity<Task> postNewTask(@RequestBody @Valid Task task) {
-        log.info("postNewTask::POST request with body:{}",task.toString());
+        log.info("postNewTask::POST request with body:{}", task.toString());
         var newTask = serviceTaskManager.postNewTask(task);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -63,19 +64,21 @@ public class TaskManagerController {
 //    }
 
     @PatchMapping("/{id}/start")
-    public ResponseEntity<Task> startTaskById(@PathVariable Long id) {
+    public ResponseEntity<Task> startTaskById(@PathVariable Long id, @RequestParam Long assignedId) {
         log.info("startTaskById::PATCH request to start task by id:{}", id);
-        var taskToUpdate = serviceTaskManager.startTaskById(id);
+        var taskToUpdate = serviceTaskManager.startTaskById(id, assignedId);
 
         return ResponseEntity.ok(taskToUpdate);
     }
+
     @PatchMapping("/{id}/reopen")
     public ResponseEntity<Task> reopenTaskById(@PathVariable Long id, @RequestBody @Valid Task task) {
         log.info("reopenTaskById::PATCH request to reopen task by id:{}", id);
-        var taskToUpdate = serviceTaskManager.reopenTaskById(id,task);
+        var taskToUpdate = serviceTaskManager.reopenTaskById(id, task);
 
         return ResponseEntity.ok(taskToUpdate);
     }
+
     @PatchMapping("/{id}/complete")
     public ResponseEntity<Task> completeTaskById(@PathVariable Long id) {
         log.info("completeTaskById::PATCH request to complete task by id:{}", id);
