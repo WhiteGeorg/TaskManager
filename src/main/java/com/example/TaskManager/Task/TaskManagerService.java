@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -140,5 +141,18 @@ public class TaskManagerService {
         taskRepository.save(entityToUpdate);
 
         return mapper.mapEntityToDomain(entityToUpdate);
+    }
+
+    public List<Task> getPageOfTaskListByFilter(Long creatorId,Long assignedId, TaskStatus status, Integer pageSize, Integer pageNum) {
+        log.info("getPageOfTaskListByFilter::called with params:creatorId {},assignedId {},status {}, pageSize {}, pageNum {}",creatorId,assignedId,status, pageSize, pageNum);
+        int pageSize_ = pageSize == null ? 10 : pageSize;
+        int pageNum_ = pageNum == null ? 0 : pageNum;
+        Pageable pageable = Pageable.ofSize(pageSize_).withPage(pageNum_);
+        var taskEntitiesList = taskRepository.findAllByFilter(creatorId,assignedId,status,pageable);
+        log.info("getPageOfTaskListByFilter finish with body:{}",taskEntitiesList);
+        return taskEntitiesList
+                .stream()
+                .map(mapper::mapEntityToDomain)
+                .toList();
     }
 }

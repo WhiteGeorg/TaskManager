@@ -23,10 +23,29 @@ public class TaskManagerController {
         this.serviceTaskManager = serviceTaskManager;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Task>> getTaskList() {
         log.info("getTaskList::GET request called");
         var taskList = serviceTaskManager.getTaskList();
+        return ResponseEntity.ok(taskList);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Task>> getPageOfTaskListByFilter(
+            @RequestParam(name = "creatorId", required = false) Long creatorId,
+            @RequestParam(name = "assignedId", required = false) Long assignedId,
+            @RequestParam(name = "status", required = false) TaskStatus status,
+            @RequestParam(name = "pageSize", required = false) Integer pageSize,
+            @RequestParam(name = "pageNum", required = false) Integer pageNum
+    ) {
+        log.info("getPageOfTaskListByFilter::GET request called with params:creatorId {},assignedId {}, TaskStatus {},pageSize {},pageNum {}", creatorId, assignedId, status, pageSize, pageNum);
+        var taskList = serviceTaskManager
+                .getPageOfTaskListByFilter(creatorId
+                        , assignedId
+                        , status
+                        , pageSize
+                        , pageNum);
+
         return ResponseEntity.ok(taskList);
     }
 
