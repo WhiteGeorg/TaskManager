@@ -1,4 +1,4 @@
-package com.example.TaskManager;
+package com.example.TaskManager.Task;
 
 
 import jakarta.validation.Valid;
@@ -13,13 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
-public class ControllerTaskManager {
-    Logger log = LoggerFactory.getLogger(ControllerTaskManager.class);
+public class TaskManagerController {
+    Logger log = LoggerFactory.getLogger(TaskManagerController.class);
 
-    ServiceTaskManager serviceTaskManager;
+    TaskManagerService serviceTaskManager;
 
     @Autowired
-    public ControllerTaskManager(ServiceTaskManager serviceTaskManager) {
+    public TaskManagerController(TaskManagerService serviceTaskManager) {
         this.serviceTaskManager = serviceTaskManager;
     }
     @GetMapping
@@ -54,13 +54,13 @@ public class ControllerTaskManager {
                 .build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Task> putTaskById(@PathVariable Long id, @RequestBody @Valid Task task) {
-        log.info("putTaskById::PUT request with body:{}",task.toString());
-        var taskToUpdate = serviceTaskManager.putTaskById(id, task);
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskToUpdate);
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Task> putTaskById(@PathVariable Long id, @RequestBody @Valid Task task) {
+//        log.info("putTaskById::PUT request with body:{}",task.toString());
+//        var taskToUpdate = serviceTaskManager.putTaskById(id, task);
+//
+//        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskToUpdate);
+//    }
 
     @PatchMapping("/{id}/start")
     public ResponseEntity<Task> startTaskById(@PathVariable Long id) {

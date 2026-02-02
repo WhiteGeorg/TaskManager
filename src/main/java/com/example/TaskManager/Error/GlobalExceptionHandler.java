@@ -1,4 +1,4 @@
-package com.example.TaskManager;
+package com.example.TaskManager.Error;
 
 
 import jakarta.persistence.EntityNotFoundException;

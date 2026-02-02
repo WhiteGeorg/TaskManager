@@ -1,12 +1,12 @@
-package com.example.TaskManager;
+package com.example.TaskManager.Task;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "Tasks")
 @Entity
-public class EntityTask {
+public class TaskEntity {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +35,7 @@ public class EntityTask {
     @Column(name = "deadline_Date")
     LocalDateTime deadlineDate;
 
+    @Null
     @Column(name = "complete_Time")
     LocalDateTime completeTime;
 

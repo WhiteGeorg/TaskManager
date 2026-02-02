@@ -1,4 +1,4 @@
-package com.example.TaskManager;
+package com.example.TaskManager.Task;
 
 public enum TaskPriority {
     LOW,

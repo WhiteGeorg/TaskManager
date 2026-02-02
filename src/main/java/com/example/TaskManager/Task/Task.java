@@ -1,10 +1,9 @@
-package com.example.TaskManager;
+package com.example.TaskManager.Task;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
