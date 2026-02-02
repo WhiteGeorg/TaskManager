@@ -2,6 +2,8 @@ package com.example.TaskManager.Task;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ public class TaskManagerService {
 
     TaskRepository taskRepository;
     TaskMapper mapper;
+    Logger log = LoggerFactory.getLogger(TaskManagerService.class);
 
     @Autowired
     TaskManagerService(TaskRepository taskRepository, TaskMapper mapper) {
@@ -21,7 +24,7 @@ public class TaskManagerService {
     }
 
     public Task postNewTask(Task task) {
-
+    log.info("postNewTask: was called with body:{}",task);
         if (task.getStatus() != null)
             throw new IllegalStateException("Status should be null");
 
@@ -34,6 +37,7 @@ public class TaskManagerService {
     }
 
     public Task getTaskById(Long id) {
+        log.info("getTaskById: was called with body:{}",id);
         TaskEntity entityTask = taskRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can not find any tasks with id " + id));
@@ -42,7 +46,7 @@ public class TaskManagerService {
     }
 
     public List<Task> getTaskList() {
-
+        log.info("getTaskList: was called");
         return taskRepository
                 .findAll()
                 .stream()
@@ -52,6 +56,7 @@ public class TaskManagerService {
     }
 
     public void deleteTaskById(Long id) {
+        log.info("deleteTaskById: was called with body{}",id);
 
         taskRepository
                 .findById(id)
@@ -79,7 +84,7 @@ public class TaskManagerService {
 //    }
 
     public Task reopenTaskById(Long id,Task task) {
-
+        log.info("reopenTaskById: was called with body{},{}",id,task);
         var entityToUpdate = taskRepository
                 .findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Can not find any tasks with id " + id));
@@ -100,7 +105,7 @@ public class TaskManagerService {
     }
     //добавить параметр с assigned
     public Task startTaskById(Long id,Long assignedId) {
-
+        log.info("startTaskById: was called with body{},{}",id,assignedId);
         var entityToUpdate = taskRepository
                 .findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Can not find any tasks with id " + id));
@@ -118,6 +123,7 @@ public class TaskManagerService {
         return mapper.mapEntityToDomain(entityToUpdate);
     }
     public Task completeTaskById(Long id) {
+        log.info("completeTaskById: was called with body{}",id);
 
         var entityToUpdate = taskRepository
                 .findById(id)
